@@ -132,16 +132,17 @@ Nhóm chạy `ChunkingStrategyComparator().compare(text, chunk_size=500)` trên 
 
 Điểm **/10** dưới đây là **đánh giá đồng thuận trong nhóm** sau khi xem code, benchmark và demo.
 
+
 | Thành viên | Strategy (tóm tắt) | Điểm nhóm (/10) | Điểm mạnh | Điểm yếu |
 |-------------|-------------------|-----------------|-----------|----------|
-| Nguyễn Triệu Gia Khánh | `RecursiveChunker` + pipeline đo `eval_lab_metrics.py` | **10** | Phân tích chunk + benchmark rõ ràng; tài liệu nhóm đầy đủ | Cần thêm thử nghiệm embedding neural để so sánh với TF‑IDF |
-| Nguyễn Thùy Linh | `FixedSizeChunker` + overlap ổn định | **10** | Triển khai nhanh, dễ tái lập thí nghiệm | Một số đoạn dài vẫn cắt giữa ý |
-| Nguyễn Hoàng Khải Minh | `SentenceChunker` + tinh chỉnh `max_sentences_per_chunk` | **10** | Chunk đọc tự nhiên, phù hợp câu hỏi ngắn | Chiến lược phụ thuộc dấu câu tiếng Anh |
-| Nguyễn Thị Diệu Linh | `RecursiveChunker` (separator tùy chỉnh nhẹ) | **10** | Giữ được khối heading/bullet | Thời gian tuning separator |
-| Nguyễn Hoàng Duy | Kết hợp metadata + `search_with_filter` trong demo | **10** | Lọc `category` hiệu quả trên query hẹp | Cần mở rộng benchmark khi đổi schema metadata |
+| Nguyễn Triệu Gia Khánh | Semantic Chunker | 10 | Các chunk giàu ngữ nghĩa hơn giúp cải thiện độ chính xác của bước retrieval, dẫn đến phản hồi mạch lạc và liên quan hơn từ LLM. | Tính toán embedding và độ tương đồng có thể tốn kém hơn fixed-size chunking. |
+| Nguyễn Thùy Linh | SentenceChunker| 10 | Giữ được ngữ nghĩa tự nhiên của câu, ít bị cắt ngang ý giữa câu | Có thể thiếu thông tin quan trọng nếu câu standalone không đủ nghĩa |
+| Nguyễn Hoàng Khải Minh | RecursiveChunker | 10 | Cố gắng tôn trọng cấu trúc logic (đoạn văn, câu) của văn bản nhiều nhất có thể trong khi vẫn đảm bảo kích thước chunk phù hợp. | Việc triển khai có thể phức tạp hơn một chút, chi phí tính toán có thể tăng lên do quá trình kiểm tra và chia đệ quy. |
+| Nguyễn Thị Diệu Linh | FixedSizeChunker | 10 | Dễ triển khai và quản lý, kích thước chunk đồng nhất giúp đơn giản hóa việc xử lý hàng loạt (batch processing). | Rất dễ phá vỡ cấu trúc ngữ nghĩa tự nhiên của văn bản. Một câu, một ý tưởng quan trọng có thể bị chia cắt làm đôi, nằm ở hai chunk khác nhau, làm giảm chất lượng ngữ cảnh được cung cấp cho LLM. |
+| Nguyễn Hoàng Duy | HeadingChunker | 10 | Giữ được context lớn theo từng mục (section-level) | Chunk có thể quá dài, có thể chứa nhiều thông tin không liên quan, giảm precision |
 
 **Kết luận strategy tốt nhất cho dmoain này:**  
-Nhóm thống nhất **`RecursiveChunker`** làm hướng chính cho IELTS (heading/bullet), đồng thời mỗi thành viên có nhánh so sánh riêng để học chéo. Sau benchmark và demo, nhóm **đồng thuận 10/10** cho từng thành viên về đóng góp strategy và phối hợp nhóm.
+Nhóm thống nhất RecursiveChunker làm hướng chính cho IELTS (heading/bullet), đồng thời mỗi thành viên có nhánh so sánh riêng để học chéo. Sau benchmark và demo, nhóm đồng thuận 10/10 cho từng thành viên về đóng góp strategy và phối hợp nhóm.
 
 
 ---
